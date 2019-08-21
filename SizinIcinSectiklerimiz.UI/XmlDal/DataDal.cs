@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using SizinIcinSectiklerimizXml;
 using SizinIcinSectiklerimizXml.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Text;
 
 namespace SizinIcinSectiklerimiz.UI.XmlDal
@@ -15,6 +17,69 @@ namespace SizinIcinSectiklerimiz.UI.XmlDal
         public DataDal(IConfiguration iconfiguration)
         {
             _connectionString = iconfiguration.GetConnectionString("Default");
+        }
+
+        public List<NewsData> AddNews(NewsData newsData)
+        {
+            using (StreamReader _StreamReader = new StreamReader(@"C:\Users\Emre\Desktop\HurriyetApp\SizinIcinSectiklerimiz.UI\SizinIcinSectiklerimiz.Data\Data\bigpara.json"))
+            {
+                string jsonData = _StreamReader.ReadToEnd();
+                List<NewsData> listCategory = JsonConvert.DeserializeObject<List<NewsData>>(jsonData);
+
+
+                SqlConnection connection = new SqlConnection("Data Source=DESKTOP-6DFTQAA;Initial Catalog=NewsDb;Integrated Security=True");
+                connection.Open();
+                string commandString = "Insert Into New(Title,Spot,Description,Link,ImagePath,Category,[Order]) Values(@Title,@Spot,@Description,@Link,@ImagePath,@Category,@Order)";
+                string asd = "TRUNCATE TABLE New";
+
+                var listNewsDelete = new List<NewsData>();
+                using (SqlConnection conDeleteNews = new SqlConnection("Data Source=DESKTOP-6DFTQAA;Initial Catalog=NewsDb;Integrated Security=True"))
+                {
+                    SqlCommand cmd = new SqlCommand(asd, conDeleteNews);
+                    //cmd.CommandType = CommandType.StoredProcedure;
+                    conDeleteNews.Open();
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        listNewsDelete.Remove(new NewsData
+                        {
+                            Title = dr["Title"].ToString(),
+                            Spot = dr["Spot"].ToString(),
+                            Description = dr["Description"].ToString(),
+                            Link = dr["Link"].ToString(),
+                            ImagePath = dr["ImagePath"].ToString(),
+                            Category = dr["Category"].ToString(),
+                            Order = Convert.ToInt32(dr["Order"]),
+                        });
+                    }
+                }
+
+                if (connection.State == ConnectionState.Open)
+                {
+                    foreach (var item in listCategory)
+                    {
+                        SqlCommand command = new SqlCommand(commandString, connection);
+                        command.Parameters.AddWithValue("@Title", item.Title);
+                        command.Parameters.AddWithValue("Spot", item.Spot);
+                        if (string.IsNullOrEmpty(item.Description))
+                        {
+                            command.Parameters.AddWithValue("@Description", System.DBNull.Value);
+                        }
+                        else
+                        {
+                            command.Parameters.AddWithValue("@Description", item.Description);
+                        }
+
+                        command.Parameters.AddWithValue("@Link", item.Link);
+                        command.Parameters.AddWithValue("@ImagePath", item.ImagePath);
+                        command.Parameters.AddWithValue("@Category", item.Category);
+                        command.Parameters.AddWithValue("@Order", item.Order);
+                        command.ExecuteNonQuery();
+                    }
+                }
+                connection.Close();
+                return listCategory;
+            }
         }
 
         public List<NewsData> GetListNews()

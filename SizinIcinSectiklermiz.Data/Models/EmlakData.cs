@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SizinIcinSectiklerimizXml.Models
+namespace SizinIcinSectiklermiz.Data.Models
 {
     public class EmlakData
     {
