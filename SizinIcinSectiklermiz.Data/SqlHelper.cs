@@ -1,22 +1,17 @@
-﻿using SizinIcinSectiklerimiz.UI.Models;
-using SizinIcinSectiklerimizXml.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Text;
 
-namespace SizinIcinSectiklerimiz.UI
+namespace SizinIcinSectiklermiz.Data
 {
-    public static class SqlHelper
+    public class SqlHelper
     {
-        public static void InsertDb(Data data) 
+        public static void InsertDb(Models.Data data) 
         {
-            
             SqlConnection con = new SqlConnection("Data Source=DESKTOP-6DFTQAA;Initial Catalog=NewsDb;Integrated Security=True");
             con.Open();
             SqlCommand command = new SqlCommand();
             string commandStr = string.Empty;
-            commandStr = "Insert Into Data(Title,Image,Description,Link) Values(@Title,@Image,@Description,@Link)";
+            commandStr = "Insert Into Data(Title,Image,Description,Link,Category,Type) Values(@Title,@Image,@Description,@Link,@Category,@Type)";
             command.Connection = con;
             command.CommandText = commandStr;
 
@@ -31,6 +26,15 @@ namespace SizinIcinSectiklerimiz.UI
                 command.Parameters.AddWithValue("@Description", data.Description);
             }
             command.Parameters.AddWithValue("@Link", data.Link);
+            command.Parameters.AddWithValue("@Category",data.Category);
+            if (string.IsNullOrEmpty(data.Type))
+            {
+                command.Parameters.AddWithValue("@Type", System.DBNull.Value);
+            }
+            else
+            {
+                command.Parameters.AddWithValue("@Type", data.Type);
+            }
             command.ExecuteNonQuery();
             con.Close();
         }
@@ -48,7 +52,7 @@ namespace SizinIcinSectiklerimiz.UI
             con.Close();
         }
 
-        public static void InsertList(List<Data> list)
+        public static void InsertList(List<Models.Data> list)
         {
             foreach (var item in list)
             {

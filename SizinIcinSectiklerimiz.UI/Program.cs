@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using SizinIcinSectiklerimiz.UI.Models;
-using System.Net;
-using static SizinIcinSectiklerimiz.UI.Models.Data;
+using SizinIcinSectiklermiz.Data;
+using SizinIcinSectiklermiz.Data.Models;
 
 namespace SizinIcinSectiklerimiz.UI
 {
@@ -19,22 +17,25 @@ namespace SizinIcinSectiklerimiz.UI
             GetAppSettingsFile();
             SqlHelper.TruncateDb();
 
-            StreamReader _StreamReader = new StreamReader(@"C:\\Users\\Emre\\Desktop\\HurriyetApp\\SizinIcinSectiklerimiz.UI\\SizinIcinSectiklermiz.Data\\Data\\bigpara.json");
+            StreamReader _StreamReader = new StreamReader(@"C:\Users\Emre\Desktop\HurriyetApp\SizinIcinSectiklerimiz.UI\SizinIcinSectiklerimiz.UI\Data\bigpara.json");
             string jsonData = _StreamReader.ReadToEnd();
             var listNews = JsonConvert.DeserializeObject<List<Data>>(jsonData);
+            foreach (var item in listNews)
+            {
+                item.Category = "Bigpara";
+                item.Type = "Json";
+            }
             SqlHelper.InsertList(listNews);
 
             XmlDocument xmlDocEmlak = new XmlDocument();
-            xmlDocEmlak.Load("C:\\Users\\Emre\\Desktop\\HurriyetApp\\SizinIcinSectiklerimiz.UI\\SizinIcinSectiklermiz.Data\\Data\\emlak.xml");
+            xmlDocEmlak.Load("C:\\Users\\Emre\\Desktop\\HurriyetApp\\SizinIcinSectiklerimiz.UI\\SizinIcinSectiklerimiz.UI\\Data\\emlak.xml");
             XmlDocument xmlDocMahmure = new XmlDocument();
-            xmlDocMahmure.Load("C:\\Users\\Emre\\Desktop\\HurriyetApp\\SizinIcinSectiklerimiz.UI\\SizinIcinSectiklermiz.Data\\Data\\mahmure.xml");
+            xmlDocMahmure.Load("C:\\Users\\Emre\\Desktop\\HurriyetApp\\SizinIcinSectiklerimiz.UI\\SizinIcinSectiklerimiz.UI\\Data\\mahmure.xml");
             XmlNodeList nodeListEmlak = xmlDocEmlak.DocumentElement.SelectNodes("/Advertorial/adv");
             XmlNodeList nodeListMahmure = xmlDocMahmure.DocumentElement.SelectNodes("/HABERLER/HABER");
-            var castEmlak = new List<XmlNode>(nodeListEmlak.Cast<XmlNode>());
-            var castMahmure = new List<XmlNode>(nodeListMahmure.Cast<XmlNode>());
             var listData = new List<Data>();
 
-            foreach (XmlNode node in castEmlak)
+            foreach (XmlNode node in nodeListEmlak)
             {
                 listData.Add(
                     new Data
@@ -43,11 +44,13 @@ namespace SizinIcinSectiklerimiz.UI
                         Image = node.SelectSingleNode("adv_image").InnerText,
                         Description = node.SelectSingleNode("adv_text").InnerText,
                         Link = node.SelectSingleNode("adv_def_link").InnerText,
+                        Category = "Hürriyet Emlak",
+                        Type = "Xml",
                     }
                     );
             }
 
-            foreach (XmlNode item in castMahmure)
+            foreach (XmlNode item in nodeListMahmure)
             {
                 listData.Add(
                     new Data
@@ -56,6 +59,8 @@ namespace SizinIcinSectiklerimiz.UI
                         Image = item.SelectSingleNode("RESIM").InnerText,
                         Description = item.SelectSingleNode("METIN").InnerText,
                         Link = item.SelectSingleNode("LINK").InnerText,
+                        Category = "Mahmure",
+                        Type = "Xml",
                     }
                     );
             }
@@ -92,7 +97,8 @@ namespace SizinIcinSectiklerimiz.UI
 
 
 
-
+//var castEmlak = new List<XmlNode>(nodeListEmlak.Cast<XmlNode>());
+//var castMahmure = new List<XmlNode>(nodeListMahmure.Cast<XmlNode>());
 
 
 //XmlSerializer serializer2 = new XmlSerializer(typeof(List<MahmureData>));

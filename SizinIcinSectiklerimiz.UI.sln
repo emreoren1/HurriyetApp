@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.757
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SizinIcinSectiklerimiz.UI", "SizinIcinSectiklerimiz.UI\SizinIcinSectiklerimiz.UI.csproj", "{FBC451FE-A18E-4CF0-8B09-71FE6DEA46EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SizinIcinSectiklerimiz.UI", "SizinIcinSectiklerimiz.UI\SizinIcinSectiklerimiz.UI.csproj", "{FBC451FE-A18E-4CF0-8B09-71FE6DEA46EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SizinIcinSectiklermiz.Data", "SizinIcinSectiklermiz.Data\SizinIcinSectiklermiz.Data.csproj", "{CFCA3AD5-EA76-441E-887A-8DF947FAE8D3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SizinIcinSectiklermiz.Business", "SizinIcinSectiklermiz.Business\SizinIcinSectiklermiz.Business.csproj", "{6EF75DAE-C433-4EA4-8543-B7DACB78143F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SizinIcinSectiklermiz.Data", "SizinIcinSectiklermiz.Data\SizinIcinSectiklermiz.Data.csproj", "{CFCA3AD5-EA76-441E-887A-8DF947FAE8D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +21,6 @@ Global
 		{CFCA3AD5-EA76-441E-887A-8DF947FAE8D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFCA3AD5-EA76-441E-887A-8DF947FAE8D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFCA3AD5-EA76-441E-887A-8DF947FAE8D3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6EF75DAE-C433-4EA4-8543-B7DACB78143F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6EF75DAE-C433-4EA4-8543-B7DACB78143F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6EF75DAE-C433-4EA4-8543-B7DACB78143F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6EF75DAE-C433-4EA4-8543-B7DACB78143F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

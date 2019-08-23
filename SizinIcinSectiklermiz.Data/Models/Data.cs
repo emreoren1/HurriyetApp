@@ -1,10 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Serialization;
 
-namespace SizinIcinSectiklerimiz.UI.Models
+namespace SizinIcinSectiklermiz.Data.Models
 {
     public class Data
     {
@@ -13,5 +9,7 @@ namespace SizinIcinSectiklerimiz.UI.Models
         public string Image { get; set; }
         public string Description { get; set; }
         public string Link { get; set; }
+        public string Category { get; set; }
+        public string Type { get; set; }
     }
 }
