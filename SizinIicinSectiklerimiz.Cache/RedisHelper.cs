@@ -22,13 +22,11 @@ namespace SizinIicinSectiklerimiz.Cache
         //}
         private readonly int databaseIndex;
         private static string host;
-        private readonly int timeOut;
         public RedisHelper()
         {
             GetAppSettingsFile();
             host = _iconfiguration.GetSection("RedisConfig").GetSection("Host").Value;
             databaseIndex = Convert.ToInt32(_iconfiguration.GetSection("RedisConfig").GetSection("Database").Value);
-            timeOut = Convert.ToInt32(_iconfiguration.GetSection("RedisConfig").GetSection("Timeout").Value);
         }
         static RedisHelper()
         {
@@ -68,12 +66,18 @@ namespace SizinIicinSectiklerimiz.Cache
             }
         }
 
-        public void SaveBigData(string key)
+        public void SaveBigData(string key, string timeout, List<Data> lists)
         {
-            var list = SqlHelper.SelectDb();
             var cache = RedisHelper.Connection.GetDatabase(databaseIndex);
-            var value = JsonConvert.SerializeObject(list);
-            cache.StringSet(key, value, TimeSpan.FromMinutes(timeOut));
+            var value = JsonConvert.SerializeObject(lists);
+            if (!string.IsNullOrEmpty(key))
+            {
+                cache.StringSet(key, value, TimeSpan.FromMinutes(Convert.ToDouble(timeout)));
+            }
+            else
+            {
+                Console.WriteLine("Please Add Key");
+            }
         }
 
         static void GetAppSettingsFile()

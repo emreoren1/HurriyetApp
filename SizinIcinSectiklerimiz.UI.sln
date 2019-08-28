@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SizinIcinSectiklerimiz.UI",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SizinIcinSectiklermiz.Data", "SizinIcinSectiklermiz.Data\SizinIcinSectiklermiz.Data.csproj", "{CFCA3AD5-EA76-441E-887A-8DF947FAE8D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SizinIicinSectiklerimiz.Cache", "SizinIicinSectiklerimiz.Cache\SizinIicinSectiklerimiz.Cache.csproj", "{5F89480F-78FB-4E0E-B68F-35B0F6903E5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SizinIicinSectiklerimiz.Cache", "SizinIicinSectiklerimiz.Cache\SizinIicinSectiklerimiz.Cache.csproj", "{5F89480F-78FB-4E0E-B68F-35B0F6903E5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SizinIcinSectiklerimiz.WebUI", "SizinIcinSectiklerimiz.WebUI\SizinIcinSectiklerimiz.WebUI.csproj", "{3424EEDF-35B9-48CF-A31A-F04D63586F92}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{5F89480F-78FB-4E0E-B68F-35B0F6903E5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F89480F-78FB-4E0E-B68F-35B0F6903E5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F89480F-78FB-4E0E-B68F-35B0F6903E5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3424EEDF-35B9-48CF-A31A-F04D63586F92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3424EEDF-35B9-48CF-A31A-F04D63586F92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3424EEDF-35B9-48CF-A31A-F04D63586F92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3424EEDF-35B9-48CF-A31A-F04D63586F92}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

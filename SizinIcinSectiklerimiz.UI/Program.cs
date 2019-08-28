@@ -25,7 +25,9 @@ namespace SizinIcinSectiklerimiz.UI
         {
             GetAppSettingsFile();
 
+            
             var redisKey = _iconfiguration.GetSection("RedisConfig").GetSection("Key").Value;
+            var timeOut = _iconfiguration.GetSection("RedisConfig").GetSection("Timeout").Value;
             RedisHelper redisHelper = new RedisHelper();
             redisHelper.ReadData(redisKey);
 
@@ -36,10 +38,9 @@ namespace SizinIcinSectiklerimiz.UI
             FactoryData xmlData = creater.FactoryMethod(Datas.Xml);
             jsonData.DataType();
             xmlData.DataType();
-
             var list = SqlHelper.SelectDb();
-            
-            redisHelper.SaveBigData(redisKey);
+
+            redisHelper.SaveBigData(redisKey, timeOut, list);
 
             Console.WriteLine("Press to any key...");
             Console.ReadLine();
