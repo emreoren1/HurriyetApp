@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SizinIcinSectiklermiz.Data\SizinIcinSectiklermiz.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="StackExchange.Redis.StrongName">
+      <HintPath>..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\stackexchange.redis.strongname\1.2.6\lib\netstandard1.5\StackExchange.Redis.StrongName.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

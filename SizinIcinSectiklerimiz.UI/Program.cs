@@ -1,70 +1,45 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Xml;
 using System.IO;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using SizinIcinSectiklermiz.Data;
+using SizinIcinSectiklerimiz.UI.FactoryPattern;
+using System.Xml;
+using ServiceStack.Redis;
+using StackExchange.Redis;
+using Microsoft.Extensions.Caching.Memory;
+using System.Runtime.Caching;
 using SizinIcinSectiklermiz.Data.Models;
+using System.Collections.Generic;
+using ServiceStack;
+using System.Linq;
+using Newtonsoft.Json;
+using SizinIicinSectiklerimiz.Cache;
 
 namespace SizinIcinSectiklerimiz.UI
 {
     class Program
     {
         private static IConfiguration _iconfiguration;
+
         static void Main(string[] args)
         {
             GetAppSettingsFile();
+
+            var redisKey = _iconfiguration.GetSection("RedisConfig").GetSection("Key").Value;
+            RedisHelper redisHelper = new RedisHelper();
+            redisHelper.ReadData(redisKey);
+
             SqlHelper.TruncateDb();
 
-            StreamReader _StreamReader = new StreamReader(@"C:\Users\Emre\Desktop\HurriyetApp\SizinIcinSectiklerimiz.UI\SizinIcinSectiklerimiz.UI\Data\bigpara.json");
-            string jsonData = _StreamReader.ReadToEnd();
-            var listNews = JsonConvert.DeserializeObject<List<Data>>(jsonData);
-            foreach (var item in listNews)
-            {
-                item.Category = "Bigpara";
-                item.Type = "Json";
-            }
-            SqlHelper.InsertList(listNews);
+            Creater creater = new Creater();
+            FactoryData jsonData = creater.FactoryMethod(Datas.Json);
+            FactoryData xmlData = creater.FactoryMethod(Datas.Xml);
+            jsonData.DataType();
+            xmlData.DataType();
 
-            XmlDocument xmlDocEmlak = new XmlDocument();
-            xmlDocEmlak.Load("C:\\Users\\Emre\\Desktop\\HurriyetApp\\SizinIcinSectiklerimiz.UI\\SizinIcinSectiklerimiz.UI\\Data\\emlak.xml");
-            XmlDocument xmlDocMahmure = new XmlDocument();
-            xmlDocMahmure.Load("C:\\Users\\Emre\\Desktop\\HurriyetApp\\SizinIcinSectiklerimiz.UI\\SizinIcinSectiklerimiz.UI\\Data\\mahmure.xml");
-            XmlNodeList nodeListEmlak = xmlDocEmlak.DocumentElement.SelectNodes("/Advertorial/adv");
-            XmlNodeList nodeListMahmure = xmlDocMahmure.DocumentElement.SelectNodes("/HABERLER/HABER");
-            var listData = new List<Data>();
-
-            foreach (XmlNode node in nodeListEmlak)
-            {
-                listData.Add(
-                    new Data
-                    {
-                        Title = node.SelectSingleNode("adv_title").InnerText,
-                        Image = node.SelectSingleNode("adv_image").InnerText,
-                        Description = node.SelectSingleNode("adv_text").InnerText,
-                        Link = node.SelectSingleNode("adv_def_link").InnerText,
-                        Category = "Hürriyet Emlak",
-                        Type = "Xml",
-                    }
-                    );
-            }
-
-            foreach (XmlNode item in nodeListMahmure)
-            {
-                listData.Add(
-                    new Data
-                    {
-                        Title = item.SelectSingleNode("BASLIK").InnerText,
-                        Image = item.SelectSingleNode("RESIM").InnerText,
-                        Description = item.SelectSingleNode("METIN").InnerText,
-                        Link = item.SelectSingleNode("LINK").InnerText,
-                        Category = "Mahmure",
-                        Type = "Xml",
-                    }
-                    );
-            }
-            SqlHelper.InsertList(listData);
+            var list = SqlHelper.SelectDb();
+            
+            redisHelper.SaveBigData(redisKey);
 
             Console.WriteLine("Press to any key...");
             Console.ReadLine();
@@ -76,6 +51,9 @@ namespace SizinIcinSectiklerimiz.UI
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
+            IConfiguration config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", true, true)
+                .Build();
             _iconfiguration = builder.Build();
         }
     }
@@ -92,9 +70,92 @@ namespace SizinIcinSectiklerimiz.UI
 
 
 
+//Console.WriteLine("=========================");
+//redisHelper.ReadData("RedisTest");
+//redisHelper.SaveBigData("RedisTest");
+//redisHelper.ReadData("RedisTest");
+
+
+//ConnectionMultiplexer redisConn = ConnectionMultiplexer.Connect("localhost");
+//IDatabase redDb = redisConn.GetDatabase(1);
+//var keys = "key1";
+//var value = JsonConvert.SerializeObject(list);
+//redDb.StringSet(keys, value, TimeSpan.FromMinutes(60));
+//var json = redDb.StringGet(keys);
+//var result = JsonConvert.DeserializeObject<List<Data>>(json);
+//Console.WriteLine(result);
 
 
 
+//var cache = System.Runtime.Caching.MemoryCache.Default;
+//var key = "denemelist";
+//var policy = new CacheItemPolicy { SlidingExpiration = new TimeSpan(2, 0, 0)};
+//cache.Add(key, list , policy);
+
+//string fileContents = cache["key1"] as Data;
+
+//if (fileContents == null)
+//{
+//    CacheItemPolicy policy = new CacheItemPolicy();
+//    List<Data> data = new List<Data>();
+//     data.Add("C:\\Users\\Emre\\Desktop\\HurriyetApp\\SizinIcinSectiklerimiz.UI\\SizinIcinSectiklerimiz.UI\\Data\\bigpara.json");
+//    policy.ChangeMonitors.Add(new HostFileChangeMonitor(data));
+
+//}
+//var tempData = (List<Data>)cache.Get(key);
+
+
+
+
+
+//StreamReader _StreamReader = new StreamReader(@"C:\Users\Emre\Desktop\HurriyetApp\SizinIcinSectiklerimiz.UI\SizinIcinSectiklerimiz.UI\Data\bigpara.json");
+//string jsonData = _StreamReader.ReadToEnd();
+//var listNews = JsonConvert.DeserializeObject<List<Data>>(jsonData);
+//foreach (var item in listNews)
+//{
+//    item.Category = "Bigpara";
+//    item.Type = "Json";
+//}
+//SqlHelper.InsertList();
+
+//XmlDocument xmlDocEmlak = new XmlDocument();
+//xmlDocEmlak.Load("C:\\Users\\Emre\\Desktop\\HurriyetApp\\SizinIcinSectiklerimiz.UI\\SizinIcinSectiklerimiz.UI\\Data\\emlak.xml");
+//XmlDocument xmlDocMahmure = new XmlDocument();
+//xmlDocMahmure.Load("C:\\Users\\Emre\\Desktop\\HurriyetApp\\SizinIcinSectiklerimiz.UI\\SizinIcinSectiklerimiz.UI\\Data\\mahmure.xml");
+//XmlNodeList nodeListEmlak = xmlDocEmlak.DocumentElement.SelectNodes("/Advertorial/adv");
+//XmlNodeList nodeListMahmure = xmlDocMahmure.DocumentElement.SelectNodes("/HABERLER/HABER");
+//var listData = new List<Data>();
+
+//foreach (XmlNode node in nodeListEmlak)
+//{
+//    listData.Add(
+//        new Data
+//        {
+//            Title = node.SelectSingleNode("adv_title").InnerText,
+//            Image = node.SelectSingleNode("adv_image").InnerText,
+//            Description = node.SelectSingleNode("adv_text").InnerText,
+//            Link = node.SelectSingleNode("adv_def_link").InnerText,
+//            Category = "Hürriyet Emlak",
+//            Type = "Xml",
+//        }
+//        );
+//}
+
+//foreach (XmlNode item in nodeListMahmure)
+//{
+//    listData.Add(
+//        new Data
+//        {
+//            Title = item.SelectSingleNode("BASLIK").InnerText,
+//            Image = item.SelectSingleNode("RESIM").InnerText,
+//            Description = item.SelectSingleNode("METIN").InnerText,
+//            Link = item.SelectSingleNode("LINK").InnerText,
+//            Category = "Mahmure",
+//            Type = "Xml",
+//        }
+//        );
+//}
+//SqlHelper.InsertList(listData);
 
 
 //var castEmlak = new List<XmlNode>(nodeListEmlak.Cast<XmlNode>());
