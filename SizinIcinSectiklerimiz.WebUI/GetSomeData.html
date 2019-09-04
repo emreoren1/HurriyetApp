@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="wwwroot/css/sizinIcinSectiklerimiz.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var ulNews = $('#ulNews');
+            $.ajax({
+                type: 'GET',
+                url: 'https://localhost:44328/api/Databases/GetSomeData',
+
+                dataType: 'json',
+                success: function (data) {
+                    ulNews.empty();
+                    $.each(data, function (index, val) {
+                        var Image = val.ImagePath;
+                        var Description = val.description;
+                        var Link = val.link;
+                        var Category = val.category;
+                        ulNews.append('<li class="sis-box-list-item"><a href="' + Link + '" class="sis-box-list-link cf" target="_blank"><div class="sis-box-list-content"><h6 class="sis-box-list-title">' + Category + '</h6 ><span class="sis-box-list-spot">' + Description + '</span ></div><div class="sis-box-list-media"><img style="width:113px" src="' + Image + '" alt="banner" class="sis-box-list-image"></div></a></li>')
+                    });
+                }
+            });
+        });
+    </script>
+    <div class="widget-box">
+        <div class="sis-box-list-wrapper">
+            <h5 class="sis-box-title">SİZİN İÇİN SEÇTİKLERİMİZ</h5>
+        </div>
+        <ul id="ulNews">
+
+        </ul>
+    </div>
+</body>
+</html>

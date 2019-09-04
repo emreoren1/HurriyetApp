@@ -55,15 +55,16 @@ namespace SizinIicinSectiklerimiz.Cache
             if (!string.IsNullOrEmpty(json))
             {
                 var result = JsonConvert.DeserializeObject<List<Data>>(json);
-                result.ForEach(res =>
-                {
-                    Console.WriteLine(res.ToString());
-                });
+                //result.ForEach(res =>
+                //{
+                //    Console.WriteLine(res.ToString());
+                //});
             }
-            else
-            {
-                Console.WriteLine("Key Not Found !");
-            }
+            //else
+            //{
+            //    Console.WriteLine("Key Not Found !");
+            //}
+            
         }
 
         public void SaveBigData(string key, string timeout, List<Data> lists)

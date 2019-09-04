@@ -25,20 +25,37 @@ namespace SizinIcinSectiklerimiz.UI
         {
             GetAppSettingsFile();
 
+            #region NewsCountConfig
+            var emlakCount = _iconfiguration["NewsCountConfig:emlakCount"];
+                
+            var aileCount = _iconfiguration.GetSection("NewsCountConfig").GetSection("aileCount").Value;
+            var yeniBirIsCount = _iconfiguration.GetSection("NewsCountConfig").GetSection("yeniBirIsCount").Value;
+            var bigparaCount = _iconfiguration.GetSection("NewsCountConfig").GetSection("bigparaCount").Value;
+            var mahmureCount = _iconfiguration.GetSection("NewsCountConfig").GetSection("mahmureCount").Value;
+            #endregion
+
+
+            #region RedisConfig
+
             
             var redisKey = _iconfiguration.GetSection("RedisConfig").GetSection("Key").Value;
             var timeOut = _iconfiguration.GetSection("RedisConfig").GetSection("Timeout").Value;
             RedisHelper redisHelper = new RedisHelper();
             redisHelper.ReadData(redisKey);
-
+            #endregion
             SqlHelper.TruncateDb();
 
+            #region FactoryPattern
             Creater creater = new Creater();
             FactoryData jsonData = creater.FactoryMethod(Datas.Json);
             FactoryData xmlData = creater.FactoryMethod(Datas.Xml);
             jsonData.DataType();
             xmlData.DataType();
-            var list = SqlHelper.SelectDb();
+            #endregion
+
+            var allDatas = SqlHelper.SelectDb();
+            var list = SqlHelper.SelectedData(Convert.ToInt32(emlakCount), Convert.ToInt32(aileCount), Convert.ToInt32(yeniBirIsCount), Convert.ToInt32(bigparaCount), Convert.ToInt32(mahmureCount));
+            var list2 = SqlHelper.SelectSomeData();
 
             redisHelper.SaveBigData(redisKey, timeOut, list);
 
